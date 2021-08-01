@@ -145,7 +145,7 @@ lazy val examples =
       libraryDependencies ++= Seq(
         "dev.palanga"   %% "zio-event-sourcing-core"                   % ZIO_EVENT_SOURCING_VERSION,
         "dev.palanga"   %% "zio-event-sourcing-journal-cassandra-json" % ZIO_EVENT_SOURCING_VERSION,
-        "ch.qos.logback" % "logback-classic"                           % "1.2.3",
+        "ch.qos.logback" % "logback-classic"                           % "1.2.5",
       ),
       PB.targets in Compile := Seq(
         scalapb.gen(grpc = true)          -> (sourceManaged in Compile).value,
