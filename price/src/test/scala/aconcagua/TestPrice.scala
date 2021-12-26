@@ -1,10 +1,9 @@
-package palanga.util
+package aconcagua
 
-import palanga.util.price.Currency._
-import palanga.util.price._
-import zio.prelude.NonEmptyList
-import zio.test.Assertion.{ equalTo, isLessThan, isSome }
-import zio.test._
+import price.Currency.*
+import price.*
+import zio.test.Assertion.{ equalTo, isLeft, isLessThan, isSome }
+import zio.test.*
 
 object TestPrice extends DefaultRunnableSpec {
 
@@ -146,29 +145,36 @@ object TestPrice extends DefaultRunnableSpec {
   private val toStringSuite =
     suite("to string")(
       test("simple") {
-        assert((ARS * 100).toString)(equalTo("(ARS 100)")) &&
-        assert((ARS * -100).toString)(equalTo("(ARS -100)"))
+        assert((ARS * 100).toString)(equalTo("ARS 100")) &&
+        assert((ARS * -100).toString)(equalTo("ARS -100"))
       },
       test("compound") {
-        assert((ARS * 100 + EUR * 10).toString)(equalTo("(ARS 100) + (EUR 10)"))
+        assert((ARS * 100 + EUR * 10).toString)(equalTo("ARS 100 + EUR 10"))
       },
       test("complex") {
-        assert((EUR * 10 + ARS * 100 + ARS * -10 + EUR * 1).toString)(equalTo("(ARS 90) + (EUR 11)"))
+        assert((EUR * 10 + ARS * 100 + ARS * -10 + EUR * 1).toString)(equalTo("ARS 90 + EUR 11"))
       },
     )
 
   private val fromStringSuite =
     suite("from string")(
       test("simple") {
-        assert(Price.fromStringUnsafe("ARS 100"))(equalTo(ARS * 100)) &&
-        assert(Price.fromStringUnsafe("(ARS 100)"))(equalTo(ARS * 100)) &&
-        assert((ARS * -100).toString)(equalTo("(ARS -100)"))
+        assert(Price.fromStringUnsafe("ARS 100"))(equalTo(ARS * 100))
+        && assert (Price.fromStringUnsafe("ARS 100"))(equalTo(ARS * 100))
       },
       test("compound") {
-        assert(Price.fromStringUnsafe("(ARS 100) + (EUR 10)"))(equalTo(ARS * 100 + EUR * 10))
+        assert(Price.fromStringUnsafe("ARS 100 + EUR -10"))(equalTo(ARS * 100 + EUR * -10))
       },
       test("complex") {
-        assert(Price.fromStringUnsafe("(ARS 100) + (EUR 10) + (ARS -10) + (EUR 1)"))(equalTo((ARS * 90) + (EUR * 11)))
+        assert(Price.fromStringUnsafe("ARS 100 + EUR 10 + ARS -10 + EUR 1"))(equalTo((ARS * 90) + (EUR * 11)))
+      },
+      test("extra spaces") {
+        assert(Price.fromStringUnsafe("   ARS     100     +      EUR   -10      "))(equalTo(ARS * 100 + EUR * -10))
+      },
+      test("invalid") {
+        val invalidPriceString = "ARS - 10"
+        val result             = Price.fromString(invalidPriceString)
+        assert(result.left.map(_.getMessage))(isLeft(equalTo(ParseError(invalidPriceString).getMessage)))
       },
     )
 
@@ -202,27 +208,6 @@ object TestPrice extends DefaultRunnableSpec {
     )
   }
 
-  private val lawsSuite =
-    suite("laws")(
-      suite("associativity")(
-        test("zero") {
-          val actualPrice   = NonEmptyList(Price.Zero, Price.Zero).sum[Price]
-          val expectedPrice = Price.Zero
-          assert(actualPrice)(equalTo(expectedPrice))
-        },
-        test("single") {
-          val actualPrice   = NonEmptyList(ARS * 500, ARS * 120).sum[Price]
-          val expectedPrice = ARS * 500 + ARS * 120
-          assert(actualPrice)(equalTo(expectedPrice))
-        },
-        test("compound") {
-          val actualPrice   = NonEmptyList(ARS * 500, EUR * 120, Price.Zero).sum
-          val expectedPrice = ARS * 500 + EUR * 120
-          assert(actualPrice)(equalTo(expectedPrice))
-        },
-      )
-    )
-
   override def spec =
     suite("util")(
       singlePriceSuite,
@@ -231,7 +216,6 @@ object TestPrice extends DefaultRunnableSpec {
       toStringSuite,
       fromStringSuite,
       toStringIdentitySuite,
-      lawsSuite,
     )
 
 }

@@ -7,7 +7,7 @@ import palanga.aconcagua
 import palanga.zio.eventsourcing.EventSource.EventSource
 import palanga.zio.eventsourcing.journal.Journal
 import palanga.zio.eventsourcing.journal.cassandra.CassandraJournal.Codec
-import palanga.zio.eventsourcing.{ journal, ApplyEvent, EventSource }
+import palanga.zio.eventsourcing.{ journal, EventSource, Reducer }
 import scalapb.zio_grpc.ServiceList
 import zio.console.Console
 import zio.json._
@@ -87,7 +87,7 @@ object GrpcEventSourcingExample extends zio.App {
 
   }
 
-  def painterApplyEvent: ApplyEvent[Painter, PainterEvent] = {
+  def painterApplyEvent: Reducer[Painter, PainterEvent] = {
     case (None, PainterEvent.PainterCreated(name))                =>
       Right(Painter(name))
     case (Some(painter), PainterEvent.PaintingAdded(painting, _)) =>
@@ -96,7 +96,7 @@ object GrpcEventSourcingExample extends zio.App {
       Left(new Exception(s"invalid event $e on painter $p"))
   }
 
-  def museumApplyEvent: ApplyEvent[Museum, MuseumEvent] = {
+  def museumApplyEvent: Reducer[Museum, MuseumEvent] = {
     case (None, MuseumEvent.MuseumCreated(name))                =>
       Right(Museum(name))
     case (Some(museum), MuseumEvent.PaintingAdded(painting, _)) =>
@@ -119,7 +119,7 @@ object GrpcEventSourcingExample extends zio.App {
         .readAll
         .onError(c => zio.console.putStrLnErr(c.prettyPrint))
         .mapError(_ => Status.UNKNOWN)
-        .map(identity)
+        .map(_._2)
 
   }
 
@@ -131,7 +131,7 @@ object GrpcEventSourcingExample extends zio.App {
         .readAll
         .onError(c => zio.console.putStrLnErr(c.prettyPrint))
         .mapError(_ => Status.UNKNOWN)
-        .map(identity)
+        .map(_._2)
 
   }
 
