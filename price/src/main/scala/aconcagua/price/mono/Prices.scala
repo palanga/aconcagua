@@ -1,4 +1,4 @@
-package aconcagua.monoprice
+package aconcagua.price.mono
 
 import scala.math.BigDecimal
 
@@ -14,7 +14,7 @@ class Prices[C](currency: C):
 
   def *(amount: BigDecimal): Price = Price(amount, currency)
 
-  case class Price private[monoprice] (amount: BigDecimal, currency: C) extends Ordered[Price]:
+  case class Price private[mono] (amount: BigDecimal, currency: C) extends Ordered[Price]:
     def +(that: Price): Price                 = copy(amount = this.amount + that.amount)
     def -(that: Price): Price                 = copy(amount = this.amount - that.amount)
     def *(factor: BigDecimal): Price          = copy(amount = this.amount * factor)

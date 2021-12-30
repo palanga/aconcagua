@@ -1,8 +1,7 @@
-package aconcagua.monoprice
+package aconcagua.price.mono
 
-import aconcagua.monoprice.{ NonZeroBigDecimal, Prices }
-import zio.test.Assertion.{ equalTo, isLeft, isLessThan, isNone, isSome }
 import zio.test.*
+import zio.test.Assertion.{ equalTo, isLessThan, isNone }
 
 object MonoPriceTest extends DefaultRunnableSpec {
 

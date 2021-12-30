@@ -1,4 +1,4 @@
-package aconcagua.monoprice
+package aconcagua.price.mono
 
 import scala.math.BigDecimal
 

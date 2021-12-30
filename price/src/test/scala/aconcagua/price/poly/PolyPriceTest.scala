@@ -1,11 +1,11 @@
-package aconcagua
+package aconcagua.price.poly
 
-import price.Currency.*
-import price.*
+import aconcagua.price.poly.Currency.{ ARS, EUR }
+import aconcagua.price.poly.Price
 import zio.test.Assertion.{ equalTo, isLeft, isLessThan, isSome }
-import zio.test.*
+import zio.test.{ assert, check, DefaultRunnableSpec, Gen }
 
-object TestPrice extends DefaultRunnableSpec {
+object PolyPriceTest extends DefaultRunnableSpec {
 
   private val EUR_ARS_RATE = 200
 
@@ -160,7 +160,7 @@ object TestPrice extends DefaultRunnableSpec {
     suite("from string")(
       test("simple") {
         assert(Price.fromStringUnsafe("ARS 100"))(equalTo(ARS * 100))
-        && assert (Price.fromStringUnsafe("ARS 100"))(equalTo(ARS * 100))
+        && assert(Price.fromStringUnsafe("ARS 100"))(equalTo(ARS * 100))
       },
       test("compound") {
         assert(Price.fromStringUnsafe("ARS 100 + EUR -10"))(equalTo(ARS * 100 + EUR * -10))
@@ -209,7 +209,7 @@ object TestPrice extends DefaultRunnableSpec {
   }
 
   override def spec =
-    suite("util")(
+    suite("poly price")(
       singlePriceSuite,
       compoundPriceSuite,
       zeroPriceSuite,

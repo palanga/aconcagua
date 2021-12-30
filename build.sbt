@@ -1,9 +1,9 @@
 name := "aconcagua"
 
-val ACONCAGUA_VERSION = "1.0.0"
+val ACONCAGUA_VERSION = "1.0.1"
 
-val PRICE_VERSION    = "1.0.0"
-val STD_LIST_VERSION = "1.0.0"
+val PRICE_VERSION    = ACONCAGUA_VERSION
+val STD_LIST_VERSION = ACONCAGUA_VERSION
 
 val MAIN_SCALA = "2.13.7"
 val SCALA_3    = "3.1.0"
@@ -23,17 +23,17 @@ val ZIO_ZMX_VERSION = "0.0.4+69-01a7e756-SNAPSHOT"
 
 inThisBuild(
   List(
-    organization := "dev.palanga",
-    homepage := Some(url("https://github.com/palanga/aconcagua")),
-    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    organization             := "dev.palanga",
+    homepage                 := Some(url("https://github.com/palanga/aconcagua")),
+    licenses                 := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
     Test / parallelExecution := false,
-    scmInfo := Some(
+    scmInfo                  := Some(
       ScmInfo(
         url("https://github.com/palanga/aconcagua/"),
         "scm:git:git@github.com:palanga/aconcagua.git",
       )
     ),
-    developers := List(
+    developers               := List(
       Developer(
         "palanga",
         "Andrés González",
@@ -67,16 +67,16 @@ lazy val price =
   (project in file("price"))
     .settings(commonSettings)
     .settings(
-      name := "price",
-      version := PRICE_VERSION,
+      name           := "price",
+      version        := PRICE_VERSION,
       libraryDependencies ++= Seq(
 //        "dev.zio" %% "zio"          % ZIO_VERSION,
         "dev.zio" %% "zio-test"     % ZIO_VERSION % "test",
         "dev.zio" %% "zio-test-sbt" % ZIO_VERSION % "test",
       ),
       testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
-      Test / fork := true,
-      run / fork := true,
+      Test / fork    := true,
+      run / fork     := true,
     )
     .dependsOn(
       std_list
@@ -164,20 +164,20 @@ lazy val std_list =
   (project in file("std/list"))
     .settings(commonSettings)
     .settings(
-      name := "std-list",
-      version := STD_LIST_VERSION,
+      name           := "std-list",
+      version        := STD_LIST_VERSION,
       libraryDependencies ++= Seq(
         "dev.zio" %% "zio-test"     % ZIO_VERSION % "test",
         "dev.zio" %% "zio-test-sbt" % ZIO_VERSION % "test",
       ),
       testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
-      Test / fork := true,
-      run / fork := true,
+      Test / fork    := true,
+      run / fork     := true,
     )
 
 val commonSettings =
   Def.settings(
-    scalaVersion := SCALA_3,
+    scalaVersion       := SCALA_3,
     crossScalaVersions := ALL_SCALA,
     // libraryDependencies += compilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
     // resolvers += "Artifactory" at "https://palanga.jfrog.io/artifactory/maven/",
