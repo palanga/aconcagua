@@ -1,6 +1,6 @@
 name := "aconcagua"
 
-val ACONCAGUA_VERSION = "1.0.1"
+val ACONCAGUA_VERSION = "1.1.0"
 
 val PRICE_VERSION    = ACONCAGUA_VERSION
 val STD_LIST_VERSION = ACONCAGUA_VERSION
@@ -51,6 +51,7 @@ addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck"
 
 lazy val root =
   (project in file("."))
+    .enablePlugins(ScalaJSPlugin)
     .settings(
       publish / skip := true
     )
@@ -75,8 +76,8 @@ lazy val price =
         "dev.zio" %% "zio-test-sbt" % ZIO_VERSION % "test",
       ),
       testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
-      Test / fork    := true,
-      run / fork     := true,
+//      Test / fork    := true,
+//      run / fork     := true,
     )
     .dependsOn(
       std_list
@@ -171,8 +172,8 @@ lazy val std_list =
         "dev.zio" %% "zio-test-sbt" % ZIO_VERSION % "test",
       ),
       testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
-      Test / fork    := true,
-      run / fork     := true,
+//      Test / fork    := true,
+//      run / fork     := true,
     )
 
 val commonSettings =
