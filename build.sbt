@@ -1,6 +1,6 @@
 name := "aconcagua"
 
-val ACONCAGUA_VERSION = "1.1.0"
+val ACONCAGUA_VERSION = "1.1.1"
 
 val PRICE_VERSION    = ACONCAGUA_VERSION
 val STD_LIST_VERSION = ACONCAGUA_VERSION
@@ -66,6 +66,7 @@ lazy val root =
 
 lazy val price =
   (project in file("price"))
+    .enablePlugins(ScalaJSPlugin)
     .settings(commonSettings)
     .settings(
       name           := "price",
@@ -163,6 +164,7 @@ lazy val price =
 
 lazy val std_list =
   (project in file("std/list"))
+    .enablePlugins(ScalaJSPlugin)
     .settings(commonSettings)
     .settings(
       name           := "std-list",
